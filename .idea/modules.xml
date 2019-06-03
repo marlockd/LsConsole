@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ru.spbstu.kotlintask.kotlinTask.iml" filepath="$PROJECT_DIR$/.idea/modules/ru.spbstu.kotlintask.kotlinTask.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ru.spbstu.kotlintask.kotlinTask.main.iml" filepath="$PROJECT_DIR$/.idea/modules/ru.spbstu.kotlintask.kotlinTask.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ru.spbstu.kotlintask.kotlinTask.test.iml" filepath="$PROJECT_DIR$/.idea/modules/ru.spbstu.kotlintask.kotlinTask.test.iml" />
+    </modules>
+  </component>
+</project>
