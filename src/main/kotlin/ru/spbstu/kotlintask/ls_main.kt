@@ -4,6 +4,7 @@ import com.github.ajalt.clikt.core.NoRunCliktCommand
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import org.apache.commons.io.comparator.NameFileComparator
+import sun.security.util.Length
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
@@ -46,17 +47,8 @@ fun main(inputStr : String) : Any {
             if (it.isFile){
                 if(!args.hFlag) listOfFiles.add("${it.name} ${it.length()}")
                 else {
-                    var length :Float = it.length().toFloat()
-                    if (length > 1023) { length /= 1024
-                        if (length > 1023) {length /= 1024
-                            if (length > 1023) {length/= 1024
-                                listOfFiles.add("${it.name} $length Гбайт")
-                            }
-                            else listOfFiles.add("${it.name} $length Мбайт")
-                        }
-                        else listOfFiles.add("${it.name} $length Кбайт")
-                    }
-                    else listOfFiles.add("${it.name} $length байт")
+                    val length = lengthToHuman(it.length())
+                    listOfFiles.add("${it.name} $length")
                 }
             }
             else listOfFiles.add("dir ${it.name}")
@@ -79,28 +71,22 @@ fun main(inputStr : String) : Any {
                 var writec = '-'
                 var execute = 0
                 var executec = '-'
-                if (it.canRead()) {read = 1
+                if (it.canRead()) {
+                    read = 1
                 readc = 'r'}
-                if (it.canWrite()) {write = 1
+                if (it.canWrite()) {
+                    write = 1
                 writec = 'w'}
-                if (it.canExecute()) {execute = 1
+                if (it.canExecute()) {
+                    execute = 1
                 executec = 'x'}
                 if (!args.hFlag)
                     listOfFiles.add("${it.name} $execute$read$write ${attr.lastModifiedTime()} ${attr.size()}")
                 else {
-                    var length :Float = attr.size().toFloat()
-                    var modTime = attr.lastModifiedTime().toString().split("T")[1].split(".")[0]
-                    var modDate = attr.lastModifiedTime().toString().split("T")[0]
-                    if (length > 1023) { length /= 1024
-                        if (length > 1023) {length /= 1024
-                            if (length > 1023) {length/= 1024
-                                listOfFiles.add("${it.name} $readc$writec$executec $modDate $modTime $length Гбайт")
-                            }
-                            else listOfFiles.add("${it.name} $readc$writec$executec $modDate $modTime $length Мбайт")
-                        }
-                        else listOfFiles.add("${it.name} $readc$writec$executec $modDate $modTime $length Кбайт")
-                    }
-                    else listOfFiles.add("${it.name} $readc$writec$executec $modDate $modTime $length байт")
+                    val length = lengthToHuman(attr.size())
+                    val modTime = attr.lastModifiedTime().toString().split("T")[1].split(".")[0]
+                    val modDate = attr.lastModifiedTime().toString().split("T")[0]
+                    listOfFiles.add("${it.name} $readc$writec$executec $modDate $modTime $length")
                 }
             } else listOfFiles.add("dir ${it.name}")
         }
@@ -127,7 +113,24 @@ fun Array<String>.parse(): Args {
     return args
 }
 
-
+fun lengthToHuman(input : Long) : String {
+    var length = input.toFloat()
+    val result: String
+    if (length > 1023) {
+        length /= 1024
+        if (length > 1023) {
+            length /= 1024
+            if (length > 1023) {
+                length/= 1024
+                result = "$length Гбайт"
+            }
+            else result = "$length Мбайт"
+        }
+        else result = "$length Кбайт"
+    }
+    else result = "$length байт"
+    return result
+}
 fun output(toout: MutableList<String>) {
     toout.forEach {
         println(it)
